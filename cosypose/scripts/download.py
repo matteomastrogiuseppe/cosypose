@@ -169,7 +169,8 @@ def download_bop_original(ds_name, download_pbr):
     filename = f'{ds_name}_base.zip'
     wget_download_and_extract(BOP_SRC + filename, BOP_DS_DIR)
 
-    suffixes = ['models'] + BOP_DATASETS[ds_name]['splits']
+    # We just need the models, not the training data.
+    suffixes = ['models'] #+ BOP_DATASETS[ds_name]['splits']
     if download_pbr:
         suffixes += ['train_pbr']
     for suffix in suffixes:

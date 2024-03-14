@@ -20,16 +20,16 @@ class Plotter:
     def colors(self):
         return cycle(sns.color_palette(n_colors=40))
 
-    def plot_overlay(self, rgb_input, rgb_rendered):
+    def plot_overlay(self, rgb_input, rgb_rendered, mask_opacity):
         rgb_input = np.asarray(rgb_input)
         rgb_rendered = np.asarray(rgb_rendered)
         assert rgb_input.dtype == np.uint8 and rgb_rendered.dtype == np.uint8
         mask = ~(rgb_rendered.sum(axis=-1) == 0)
 
         overlay = rgb_input
-        overlay[:,:,2][mask] = overlay[:,:,2][mask]*0.80 #+ rgb_rendered[:,:,2][mask]*0.2
-        overlay[:,:,1][mask] = overlay[:,:,1][mask]*0.80 + rgb_rendered[:,:,1][mask]*0.2
-        overlay[:,:,0][mask] = overlay[:,:,0][mask]*0.80 #+ rgb_rendered[:,:,0][mask]*0.2
+        overlay[:,:,2][mask] = overlay[:,:,2][mask]*(1-mask_opacity) + rgb_rendered[:,:,2][mask]*mask_opacity
+        overlay[:,:,1][mask] = overlay[:,:,1][mask]*(1-mask_opacity) + rgb_rendered[:,:,1][mask]*mask_opacity
+        overlay[:,:,0][mask] = overlay[:,:,0][mask]*(1-mask_opacity) + rgb_rendered[:,:,0][mask]*mask_opacity
         
         f = self.plot_image(overlay, name='image')
         return f
