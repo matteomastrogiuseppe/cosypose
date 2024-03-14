@@ -8,15 +8,14 @@ CURR_DIR = os.path.abspath("")
 
 # Kinda complex to set arbitrary name, will fix later. Let's use the ycbv convention for now.
 # It's a pain to use weights from a certain dataset and import model not from that one. (We have to train anyway)
-name = 'obj_000031'
+id = '31'
+name = 'obj_0000'+id
 MESH_DIR = CURR_DIR+r'/inputs/meshes/'+name+r'/'
 URDF_DIR = CURR_DIR+r'/local_data/urdfs/ycbv/'+name+r'/'
 
-
-
-models_info = {}
-# You only need to provide the path
+# You only need to provide the path of .ply
 model = inout.load_ply(MESH_DIR+name+'.ply')
+shutil.copy(MESH_DIR+name+'.ply', CURR_DIR+'/local_data/bop_datasets/ycbv/models/')
 
 # Calculate 3D bounding box.
 ref_pt = list(map(float, model["pts"].min(axis=0).flatten()))
@@ -24,7 +23,9 @@ size = list(map(float, (model["pts"].max(axis=0) - ref_pt).flatten()))
 
 # Calculated diameter.
 diameter = misc.calc_pts_diameter(model["pts"])
-models_info[name] = {
+
+models_info = {}
+models_info[id] = {
     "min_x": ref_pt[0],
     "min_y": ref_pt[1],
     "min_z": ref_pt[2],
@@ -34,7 +35,20 @@ models_info[name] = {
     "diameter": diameter,
 }
 
-# Save the calculated info about the object models.
+js = inout.load_json(CURR_DIR+r'/local_data/bop_datasets/ycbv/models/models_info.json')
+
+if id not in js.keys():
+    js[id] = {
+    "min_x": ref_pt[0],
+    "min_y": ref_pt[1],
+    "min_z": ref_pt[2],
+    "size_x": size[0],
+    "size_y": size[1],
+    "size_z": size[2],
+    "diameter": diameter,
+}
+
+inout.save_json(CURR_DIR+r'/local_data/bop_datasets/ycbv/models/models_info.json', js)
 inout.save_json(MESH_DIR+name+'.json', models_info)
 
 if not os.path.exists(MESH_DIR+name+'.mtl') and not os.path.exists(MESH_DIR+name+'.obj') and not os.path.exists(MESH_DIR+name+'.urdf'):
@@ -45,4 +59,3 @@ if not os.path.exists(URDF_DIR):
     shutil.copy(MESH_DIR+name+'.mtl', URDF_DIR)
     shutil.copy(MESH_DIR+name+'.obj', URDF_DIR)
     shutil.copy(MESH_DIR+name+'.urdf', URDF_DIR)
-    
