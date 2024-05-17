@@ -47,17 +47,19 @@ class PoseDataset(torch.utils.data.Dataset):
         self.min_area = min_area
 
         self.background_augmentation = background_augmentation
-        self.background_augmentations = VOCBackgroundAugmentation(
-            voc_root=LOCAL_DATA_DIR / 'VOCdevkit/VOC2012', p=0.3)
+        if self.background_augmentation: 
+            self.background_augmentations = VOCBackgroundAugmentation(
+                voc_root=LOCAL_DATA_DIR / 'VOCdevkit/VOC2012', p=0.3)
 
         self.rgb_augmentation = rgb_augmentation
-        self.rgb_augmentations = [
-            PillowBlur(p=0.4, factor_interval=(1, 3)),
-            PillowSharpness(p=0.3, factor_interval=(0., 50.)),
-            PillowContrast(p=0.3, factor_interval=(0.2, 50.)),
-            PillowBrightness(p=0.5, factor_interval=(0.1, 6.0)),
-            PillowColor(p=0.3, factor_interval=(0., 20.)),
-        ]
+        if self.rgb_augmentation:
+            self.rgb_augmentations = [
+                PillowBlur(p=0.4, factor_interval=(1, 3)),
+                PillowSharpness(p=0.3, factor_interval=(0., 50.)),
+                PillowContrast(p=0.3, factor_interval=(0.2, 50.)),
+                PillowBrightness(p=0.5, factor_interval=(0.1, 6.0)),
+                PillowColor(p=0.3, factor_interval=(0., 20.)),
+            ]
         if gray_augmentation:
             self.rgb_augmentations.append(GrayScale(p=0.5))
 

@@ -11,7 +11,7 @@ from cosypose.simulator.camera import Camera
 
 class BulletSceneRenderer(BaseScene):
     def __init__(self,
-                 urdf_ds='ycbv',
+                 urdf_ds='camozzi',
                  preload_cache=False,
                  background_color=(0, 0, 0),
                  gpu_renderer=True,

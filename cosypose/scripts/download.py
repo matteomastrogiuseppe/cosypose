@@ -157,6 +157,7 @@ def run_rclone(cmd, args, flags):
 
 def gdrive_download(gdrive_path, local_path):
     gdrive_path = Path(gdrive_path)
+    print(gdrive_path)
     if gdrive_path.name != local_path.name:
         local_path = local_path / gdrive_path.name
     rclone_path = RCLONE_ROOT+str(gdrive_path)
@@ -170,7 +171,7 @@ def download_bop_original(ds_name, download_pbr):
     wget_download_and_extract(BOP_SRC + filename, BOP_DS_DIR)
 
     # We just need the models, not the training data.
-    suffixes = ['models'] #+ BOP_DATASETS[ds_name]['splits']
+    suffixes = ['models'] + BOP_DATASETS[ds_name]['splits']
     if download_pbr:
         suffixes += ['train_pbr']
     for suffix in suffixes:

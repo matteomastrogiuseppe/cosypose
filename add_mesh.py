@@ -5,17 +5,18 @@ import shutil
 import os
 
 CURR_DIR = os.path.abspath("")
+DS_id = "camozzi"
 
-# Kinda complex to set arbitrary name, will fix later. Let's use the ycbv convention for now.
+# Kinda complex to set arbitrary id, will fix later. Let's use the ycbv convention for now.
 # It's a pain to use weights from a certain dataset and import model not from that one. (We have to train anyway)
-id = '31'
-name = 'obj_0000'+id
-MESH_DIR = CURR_DIR+r'/inputs/meshes/'+name+r'/'
-URDF_DIR = CURR_DIR+r'/local_data/urdfs/ycbv/'+name+r'/'
+id = '3'
 
+MESH_DIR = CURR_DIR+r'/inputs/meshes/'+id+r'/'
+URDF_DIR = CURR_DIR+r'/local_data/urdfs/'+DS_id+'/'+id+r'/'
+print(MESH_DIR)
 # You only need to provide the path of .ply
-model = inout.load_ply(MESH_DIR+name+'.ply')
-shutil.copy(MESH_DIR+name+'.ply', CURR_DIR+'/local_data/bop_datasets/ycbv/models/')
+model = inout.load_ply(MESH_DIR+id+'.ply')
+shutil.copy(MESH_DIR+id+'.ply', CURR_DIR+'/local_data/bop_datasets/'+DS_id+'/models/')
 
 # Calculate 3D bounding box.
 ref_pt = list(map(float, model["pts"].min(axis=0).flatten()))
@@ -35,7 +36,7 @@ models_info[id] = {
     "diameter": diameter,
 }
 
-js = inout.load_json(CURR_DIR+r'/local_data/bop_datasets/ycbv/models/models_info.json')
+js = inout.load_json(CURR_DIR+r'/local_data/bop_datasets/'+DS_id+'/models/models_info.json')
 
 if id not in js.keys():
     js[id] = {
@@ -48,14 +49,14 @@ if id not in js.keys():
     "diameter": diameter,
 }
 
-inout.save_json(CURR_DIR+r'/local_data/bop_datasets/ycbv/models/models_info.json', js)
-inout.save_json(MESH_DIR+name+'.json', models_info)
+inout.save_json(CURR_DIR+r'/local_data/bop_datasets/'+DS_id+'/models/models_info.json', js)
+inout.save_json(MESH_DIR+id+'.json', models_info)
 
-if not os.path.exists(MESH_DIR+name+'.mtl') and not os.path.exists(MESH_DIR+name+'.obj') and not os.path.exists(MESH_DIR+name+'.urdf'):
+if not os.path.exists(MESH_DIR+id+'.mtl') and not os.path.exists(MESH_DIR+id+'.obj') and not os.path.exists(MESH_DIR+id+'.urdf'):
     print("Please add .mtl or .obj or .urdf")
 
 if not os.path.exists(URDF_DIR):
     os.mkdir(URDF_DIR)
-    shutil.copy(MESH_DIR+name+'.mtl', URDF_DIR)
-    shutil.copy(MESH_DIR+name+'.obj', URDF_DIR)
-    shutil.copy(MESH_DIR+name+'.urdf', URDF_DIR)
+    shutil.copy(MESH_DIR+id+'.mtl', URDF_DIR)
+    shutil.copy(MESH_DIR+id+'.obj', URDF_DIR)
+    shutil.copy(MESH_DIR+id+'.urdf', URDF_DIR)

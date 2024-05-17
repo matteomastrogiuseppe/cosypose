@@ -15,6 +15,11 @@ PROJECT_ROOT = Path(cosypose.__file__).parent.parent
 PROJECT_DIR = PROJECT_ROOT
 DATA_DIR = PROJECT_DIR / 'data'
 LOCAL_DATA_DIR = PROJECT_DIR / 'local_data'
+# PROJECT_ROOT = Path('/home/icub/code/detector_cosy')
+# HDD_DIR = Path('/media/icub/data')
+# PROJECT_DIR = PROJECT_ROOT
+# DATA_DIR = PROJECT_DIR / 'data'
+# LOCAL_DATA_DIR = HDD_DIR / 'local_data'
 TEST_DATA_DIR = LOCAL_DATA_DIR
 DASK_LOGS_DIR = LOCAL_DATA_DIR / 'dasklogs'
 SYNT_DS_DIR = LOCAL_DATA_DIR / 'synt_datasets'
@@ -30,6 +35,7 @@ DEBUG_DATA_DIR = LOCAL_DATA_DIR / 'debug_data'
 DEPS_DIR = PROJECT_DIR / 'deps'
 CACHE_DIR = LOCAL_DATA_DIR / 'joblib_cache'
 
+print(LOCAL_DATA_DIR)
 assert LOCAL_DATA_DIR.exists()
 CACHE_DIR.mkdir(exist_ok=True)
 TEST_DATA_DIR.mkdir(exist_ok=True)

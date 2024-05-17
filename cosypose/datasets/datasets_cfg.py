@@ -30,6 +30,11 @@ def keep_bop19(ds):
 
 
 def make_scene_dataset(ds_name, n_frames=None):
+    if ds_name == 'camozzi.train_pbr':
+        ds_dir = BOP_DS_DIR / 'camozzi'
+        ds = BOPDataset(ds_dir, split='train_pbr', load_depth=True) #Provare anche con load=True
+        return ds
+    
     # TLESS
     if ds_name == 'tless.primesense.train':
         ds = _make_tless_dataset('train_primesense')
@@ -176,6 +181,8 @@ def make_object_dataset(ds_name):
         ds = BOPObjectDataset(BOP_DS_DIR / 'lm/models')
     elif ds_name == 'tudl':
         ds = BOPObjectDataset(BOP_DS_DIR / 'tudl/models')
+    elif ds_name == 'camozzi':
+        ds = BOPObjectDataset(BOP_DS_DIR / 'camozzi/models')
 
     else:
         raise ValueError(ds_name)
@@ -190,7 +197,7 @@ def make_urdf_dataset(ds_name):
             ds_index.append(dataset.index)
         dataset.index = pd.concat(ds_index, axis=0)
         return dataset
-
+    
     # BOP
     if ds_name == 'tless.cad':
         ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'tless.cad')
@@ -208,6 +215,8 @@ def make_urdf_dataset(ds_name):
         ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'lm')
     elif ds_name == 'tudl':
         ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'tudl')
+    elif ds_name == 'camozzi':
+        ds = BOPUrdfDataset(LOCAL_DATA_DIR / 'urdfs' / 'camozzi')
 
     # Custom scenario
     elif 'custom' in ds_name:

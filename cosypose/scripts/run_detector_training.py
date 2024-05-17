@@ -7,14 +7,17 @@ from cosypose.training.train_detector import train_detector
 from cosypose.utils.logging import get_logger
 logger = get_logger(__name__)
 
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Training')
-    parser.add_argument('--config', default='', type=str)
+    parser.add_argument('--config', default='bop-camozzi-pbr', type=str)
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--resume', default='', type=str)
     parser.add_argument('--no-eval', action='store_true')
     args = parser.parse_args()
+    
+    # --config bop-camozzi-pbr
 
     cfg = argparse.ArgumentParser('').parse_args([])
     if args.config:
@@ -31,19 +34,19 @@ if __name__ == '__main__':
     N_RAND = np.random.randint(1e6)
     cfg.n_gpus = N_GPUS
 
-    run_comment = ''
+    run_comment = '20k-long2_5'
 
     # Data
     cfg.train_ds_names = []
     cfg.val_ds_names = cfg.train_ds_names
-    cfg.val_epoch_interval = 10
+    cfg.val_epoch_interval = 1000
     cfg.test_ds_names = []
-    cfg.test_epoch_interval = 30
+    cfg.test_epoch_interval = 1000
     cfg.n_test_frames = None
 
     cfg.input_resize = (480, 640)
     cfg.rgb_augmentation = True
-    cfg.background_augmentation = True
+    cfg.background_augmentation = False
     cfg.gray_augmentation = False
 
     # Model
@@ -55,11 +58,11 @@ if __name__ == '__main__':
     cfg.pretrain_coco = True
 
     # Training
-    cfg.batch_size = 2
+    cfg.batch_size = 8
     cfg.epoch_size = 5000
-    cfg.n_epochs = 600
+    cfg.n_epochs = 75
     cfg.lr_epoch_decay = 200
-    cfg.n_epochs_warmup = 50
+    cfg.n_epochs_warmup = int(cfg.n_epochs/4)
     cfg.n_dataloader_workers = N_WORKERS
 
     # Optimizer

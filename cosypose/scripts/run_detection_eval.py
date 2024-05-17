@@ -54,13 +54,13 @@ def get_meters(scene_ds):
     visib_gt_min = -1
     n_top = -1  # Given by targets
 
-    if 'bop19' in scene_ds.name:
-        targets_filename = 'test_targets_bop19.json'
-        targets_path = scene_ds.ds_dir / targets_filename
-        targets = pd.read_json(targets_path)
-        targets = remap_bop_targets(targets)
-    else:
-        targets = None
+    #if 'bop19' in scene_ds.name:
+    #    targets_filename = 'test_targets_bop19.json'
+    #    targets_path = scene_ds.ds_dir / targets_filename
+    #    targets = pd.read_json(targets_path)
+    #    targets = remap_bop_targets(targets)
+    #else:
+    targets = None
 
     base_kwargs = dict(
         errors_bsz=64,

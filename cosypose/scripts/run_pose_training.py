@@ -6,7 +6,7 @@ from colorama import Fore, Style
 from cosypose.training.train_pose import train_pose
 from cosypose.utils.logging import get_logger
 logger = get_logger(__name__)
-
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 def make_cfg(args):
     cfg = argparse.ArgumentParser('').parse_args([])
@@ -23,23 +23,25 @@ def make_cfg(args):
     N_WORKERS = 8
     N_RAND = np.random.randint(1e6)
 
-    run_comment = ''
+    run_comment = '20k'
+    
+    # --config bop-camozzi-pbr-coarse or --config bop-camozzi-pbr-refiner
 
     # Data
     cfg.urdf_ds_name = 'ycbv'
     cfg.object_ds_name = 'ycbv.bop-compat'
-    cfg.n_symmetries_batch = 64
-
+    cfg.n_symmetries_batch = 0
     cfg.train_ds_names = [('synt.ycbv-1M', 1), ('ycbv.real.train', 3), ('ycbv.synthetic.train', 3)]
     cfg.val_ds_names = cfg.train_ds_names
-    cfg.val_epoch_interval = 10
     cfg.test_ds_names = ['ycbv.test.keyframes', ]
-    cfg.test_epoch_interval = 30
+    cfg.val_epoch_interval = 1000
+    
+    cfg.test_epoch_interval = 3000
     cfg.n_test_frames = None
 
     cfg.input_resize = (480, 640)
     cfg.rgb_augmentation = True
-    cfg.background_augmentation = True
+    cfg.background_augmentation = False
     cfg.gray_augmentation = False
 
     # Model
@@ -58,9 +60,9 @@ def make_cfg(args):
     cfg.clip_grad_norm = 0.5
 
     # Training
-    cfg.batch_size = 32
-    cfg.epoch_size = 115200
-    cfg.n_epochs = 700
+    cfg.batch_size = 8
+    cfg.epoch_size = 5000
+    cfg.n_epochs = 300
     cfg.n_dataloader_workers = N_WORKERS
 
     # Method
@@ -97,7 +99,7 @@ def make_cfg(args):
         if model_type == 'coarse':
             cfg.init_method = 'z-up+auto-depth'
             cfg.TCO_input_generator = 'fixed+trans_noise'
-            run_comment = 'transnoise-zxyavg'
+            #run_comment = 'transnoise-zxyavg'
         elif model_type == 'refiner':
             cfg.TCO_input_generator = 'gt+noise'
         else:
@@ -185,7 +187,7 @@ def make_cfg(args):
         cfg.batch_size = 4
         cfg.epoch_size = 4 * cfg.batch_size
         cfg.run_id = 'debug-' + cfg.run_id
-        cfg.background_augmentation = True
+        cfg.background_augmentation = False
         cfg.n_dataloader_workers = 8
         cfg.n_rendering_workers = 0
         cfg.n_test_frames = 10

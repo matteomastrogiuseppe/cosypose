@@ -14,7 +14,7 @@ from cosypose.config import EXP_DIR
 
 from torch.utils.data import DataLoader, ConcatDataset
 from cosypose.utils.multiepoch_dataloader import MultiEpochDataLoader
-from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url
 
 from cosypose.datasets.datasets_cfg import make_scene_dataset
 from cosypose.datasets.detection_dataset import DetectionDataset
@@ -303,7 +303,7 @@ def train_detector(args):
             'n_iterations': (epoch + 1) * len(ds_iter_train),
             'n_datas': (epoch + 1) * args.global_batch_size * len(ds_iter_train),
         })
-
+        print(meters_val)
         for string, meters in zip(('train', 'val'), (meters_train, meters_val)):
             for k in dict(meters).keys():
                 log_dict[f'{string}_{k}'] = meters[k].mean

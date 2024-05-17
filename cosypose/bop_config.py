@@ -1,4 +1,14 @@
 BOP_CONFIG = dict()
+
+BOP_CONFIG['camozzi'] = dict(
+    input_resize=(640, 480),
+    urdf_ds_name='camozzi',
+    obj_ds_name= 'camozzi',
+    train_pbr_ds_name=['camozzi.train_pbr'],
+    inference_ds_name=['camozzi.train_pbr'],
+    test_ds_name=['camozzi.train_pbr']
+)
+
 BOP_CONFIG['hb'] = dict(
     input_resize=(640, 480),
     urdf_ds_name='hb',

@@ -52,6 +52,7 @@ def build_index(ds_dir, save_file, split, save_file_annotations):
                                 'view_id': view_ids, 'cam_name': cam_ids})
     frame_index.to_feather(save_file)
     save_file_annotations.write_bytes(pickle.dumps(annotations))
+    print("Wrote those damn feathers..")
     return
 
 
@@ -132,7 +133,11 @@ class BOPDataset:
                 T0O = T0C * TCO
                 T0O = T0O.toHomogeneousMatrix()
                 obj_id = annotation[n]['obj_id']
-                name = f'obj_{int(obj_id):06d}'
+                try:
+                    name = f'obj_{int(obj_id):06d}'
+                except:
+                    obj_id = int(n)
+                    name = f'obj_{int(obj_id):06d}'
                 bbox_visib = np.array(visib[n]['bbox_visib'])
                 x, y, w, h = bbox_visib
                 x1 = x

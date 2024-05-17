@@ -22,21 +22,22 @@ class DetectionDataset(torch.utils.data.Dataset):
                  background_augmentation=False):
 
         self.scene_ds = VisibilityWrapper(scene_ds)
-
+        
         self.resize_augmentation = CropResizeToAspectAugmentation(resize=resize)
-
         self.background_augmentation = background_augmentation
-        self.background_augmentations = VOCBackgroundAugmentation(
-            voc_root=LOCAL_DATA_DIR / 'VOCdevkit/VOC2012', p=0.3)
-
         self.rgb_augmentation = rgb_augmentation
-        self.rgb_augmentations = [
-            PillowBlur(p=0.4, factor_interval=(1, 3)),
-            PillowSharpness(p=0.3, factor_interval=(0., 50.)),
-            PillowContrast(p=0.3, factor_interval=(0.2, 50.)),
-            PillowBrightness(p=0.5, factor_interval=(0.1, 6.0)),
-            PillowColor(p=0.3, factor_interval=(0., 20.))
-        ]
+        if background_augmentation:          
+            self.background_augmentations = VOCBackgroundAugmentation(
+                voc_root=LOCAL_DATA_DIR / 'VOCdevkit/VOC2012', p=0.3)
+            
+        if rgb_augmentation:      
+            self.rgb_augmentations = [
+                PillowBlur(p=0.4, factor_interval=(1, 3)),
+                PillowSharpness(p=0.3, factor_interval=(0., 50.)),
+                PillowContrast(p=0.3, factor_interval=(0.2, 50.)),
+                PillowBrightness(p=0.5, factor_interval=(0.1, 6.0)),
+                PillowColor(p=0.3, factor_interval=(0., 20.))
+            ]
 
         self.label_to_category_id = label_to_category_id
         self.min_area = min_area

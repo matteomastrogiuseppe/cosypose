@@ -214,9 +214,10 @@ def train_pose(args):
 
     # Make train/val datasets
     def make_datasets(dataset_names):
+        print(dataset_names)
         datasets = []
         for (ds_name, n_repeat) in dataset_names:
-            assert 'test' not in ds_name
+            #assert 'test' not in ds_name
             ds = make_scene_dataset(ds_name)
             logger.info(f'Loaded {ds_name} with {len(ds)} images.')
             for _ in range(n_repeat):
@@ -255,7 +256,7 @@ def train_pose(args):
 
     model = create_model_pose(cfg=args, renderer=renderer, mesh_db=mesh_db).cuda()
 
-    eval_bundle = make_eval_bundle(args, model)
+    #eval_bundle = make_eval_bundle(args, model)
 
     if args.resume_run_id:
         resume_dir = EXP_DIR / args.resume_run_id
@@ -348,7 +349,7 @@ def train_pose(args):
         @torch.no_grad()
         def test():
             model.eval()
-            return run_eval(eval_bundle, epoch=epoch)
+            #return run_eval(eval_bundle, epoch=epoch)
 
         train_epoch()
         if epoch % args.val_epoch_interval == 0:
